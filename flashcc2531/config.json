@@ -1,6 +1,6 @@
 {
   "name": "flashcc2531",
-  "version": "14",
+  "version": "15",
   "slug": "flashcc2531",
   "description": "Flash Zigbee USBStick CC2531",
   "url":"https://github.com/powergt/hassio-flashcc2531",
@@ -15,5 +15,6 @@
   "apparmor": "true",
   "ports": {
   },
-  "schema": {}
+  "schema": {},
+  "init": "false"
 }
