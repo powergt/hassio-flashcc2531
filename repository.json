@@ -1,5 +1,5 @@
 {
-  "name": "Flash CC2531 Hass.io Addon",
-  "url": "https://github.com/imthemichi/hassio-flashcc2531",
-  "maintainer": "imthemichi <michi@streber24.de>"
+  "name": "Flash CC2531 Hass.io Addon (PowerGT)",
+  "url": "https://github.com/powergt/hassio-flashcc2531",
+  "maintainer": "powergt <ivano.bono@gmail.com>"
 }
