@@ -1,0 +1,4 @@
+configuration:
+  firmware:
+    name: "Firmware File"
+    description: "Nome firmware hex da programmare (deve essere presente nella cartella addon)."
