@@ -1,17 +1,20 @@
-ARG BUILD_FROM
-FROM BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/armv7-base:latest
+FROM ${BUILD_FROM}
 
-ENV LANG C.UTF-8
+# Imposta la directory di lavoro
+WORKDIR /data
 
-# Install requirements for add-on
-RUN apk add --no-cache git make g++ wiringpi-dev grep wget p7zip
+# Installa le dipendenze necessarie (se servono librerie dinamiche)
+RUN apk add --no-cache \
+    bash \
+    jq
 
-RUN git clone https://github.com/jmichault/flash_cc2531.git && \
-              cd flash_cc2531 && \
-              make all
+# Copia i file dell'addon
+COPY flash_cc2531 /flash_cc2531
+COPY default.hex /default.hex
+COPY run.sh /run.sh
 
-# Copy data for add-on
-COPY run.sh /
-RUN chmod a+x /run.sh
+# Rendi eseguibili i file
+RUN chmod a+x /run.sh /flash_cc2531
 
 CMD [ "/run.sh" ]
