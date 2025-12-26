@@ -1,0 +1,4 @@
+configuration:
+  firmware:
+    name: "Firmware File"
+    description: "The name of the hex file to flash (must be present in the addon folder)."
