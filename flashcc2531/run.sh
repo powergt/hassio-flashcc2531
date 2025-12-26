@@ -1,15 +1,25 @@
-#!/bin/bash
-echo "Startet"
-cd /flash_cc2531
-if ! ./cc_chipid | grep "ID = b524"; then echo "ChipID not found." && exit 1; fi
+#!/usr/bin/with-contenv bashio
 
-echo "Downloading firmware"
-if ! wget https://powergt.altervista.org/tmp/default.hex; then echo "firmware not found" && exit 1; fi
+FIRMWARE=$(bashio::config 'firmware')
 
-echo "erase"
-./cc_erase
+bashio::log.info "Starting CC2531 flashing process..."
+bashio::log.info "Selected firmware: ${FIRMWARE}"
 
-echo "flash firmware"
-./cc_write default.hex
+if [ ! -f "/$FIRMWARE" ]; then
+    bashio::log.error "Firmware file /${FIRMWARE} not found!"
+    bashio::exit.nok
+fi
 
-echo "Finished"
+bashio::log.info "Flashing via /dev/ttyAMA0..."
+
+# Esecuzione del binario
+if ./flash_cc2531 -p /dev/ttyAMA0 -f "$FIRMWARE"; then
+    bashio::log.info "Flashing completed successfully!"
+    bashio::exit.ok
+else
+    bashio::log.error "Flashing failed!"
+    bashio::exit.nok
+fi
+
+
+
