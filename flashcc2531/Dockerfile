@@ -2,38 +2,31 @@
 ARG BUILD_FROM=ghcr.io/home-assistant/armv7-base:latest
 FROM ${BUILD_FROM} AS builder
 
-# Installa gli strumenti di compilazione
-RUN apk add --no-cache \
-    build-base \
-    gcc \
-    make \
-    libc-dev
+RUN apk add --no-cache build-base gcc
 
-# Copia i sorgenti nella cartella di build
+# Copia i sorgenti
 COPY src/ /build/
 WORKDIR /build
 
-# Compila (modifica il comando se il tuo file si chiama diversamente o hai un Makefile)
-RUN gcc -o flash_cc2531 flash_cc2531.c
+# Compilazione dei tre strumenti distinti
+RUN gcc -o cc_chipid cc_chipid.c && \
+    gcc -o cc_erase cc_erase.c && \
+    gcc -o cc_write cc_write.c
 
-# 2. Stage finale (immagine pulita)
+# 2. Stage finale
 FROM ${BUILD_FROM}
-
-# Installa le dipendenze minime per l'esecuzione
-RUN apk add --no-cache \
-    bash \
-    ca-certificates
+RUN apk add --no-cache bash
 
 WORKDIR /data
 
-# Copia il binario compilato dallo stage precedente
-COPY --from=builder /build/flash_cc2531 /usr/local/bin/flash_cc2531
+# Copia i binari compilati
+COPY --from=builder /build/cc_chipid /usr/local/bin/
+COPY --from=builder /build/cc_erase /usr/local/bin/
+COPY --from=builder /build/cc_write /usr/local/bin/
 
-# Copia gli altri file necessari
+# Copia file necessari e script
 COPY CC2531ZNP-Prod.hex /data/CC2531ZNP-Prod.hex
 COPY run.sh /run.sh
-COPY translations/ /translations/
-
-RUN chmod a+x /run.sh /usr/local/bin/flash_cc2531
+RUN chmod a+x /run.sh /usr/local/bin/cc_*
 
 CMD [ "/run.sh" ]
