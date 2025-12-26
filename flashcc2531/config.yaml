@@ -1,7 +1,7 @@
 name: "Flash CC2531"
-version: "1.1.0"
+version: "2.0.0"
 slug: "flashcc2531"
-description: "Flash zigbee firmware to CC2531 via GPIO"
+description: "Flash zigbee firmware to CC2531 via GPIO (Compiled from source)"
 url: "https://github.com/powergt/hassio-flashcc2531"
 arch:
   - armhf
@@ -9,12 +9,12 @@ arch:
   - aarch64
 startup: once
 boot: manual
+full_access: true
 privileged:
   - SYS_RAWIO
 devices:
-  - /dev/ttyAMA0:/dev/ttyAMA0:rwm
   - /dev/mem:/dev/mem:rwm
 options:
-  firmware: "default.hex"
+  firmware: "CC2531ZNP-Prod.hex"
 schema:
   firmware: str
